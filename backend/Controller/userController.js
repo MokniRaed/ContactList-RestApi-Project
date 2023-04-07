@@ -1,8 +1,8 @@
 const UserSchema = require("../Models/UserSchema");
 const mongoose = require("mongoose");
 const authSchema = require("../Models/authSchema");
-const bcrypt = require('bcrypt');
-
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 exports.getUsers = async (req, res) => {
   try {
     const users = await UserSchema.find();
@@ -22,7 +22,6 @@ exports.getUserById = async (req, res) => {
     user
       ? res.status(200).send(user)
       : res.status(400).send("cannot find user ⚠️");
-
   } catch (error) {
     console.log(error);
     res.status(500).send("cannot get ");
@@ -88,7 +87,7 @@ exports.register = async (req, res) => {
     user.password = hashPassword;
     user.save();
     //-------------------------------------------
-    
+
     //---- Response if  the register works ------
     res.status(200).send("User Registred ✅");
     //-------------------------------------------
@@ -98,11 +97,37 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req,res)=>{
-    try {
-        
-    } catch (error) {
-        console.log(error);
-    res.status(500).send("Unexpected error");
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const dbResponse = await authSchema.findOne({ email });
+    if (!dbResponse) {
+      return res.status(400).send("try to register ! ");
     }
-}
+    const passwordMatch = await bcrypt.compare(password, dbResponse.password);
+
+    if (!passwordMatch) {
+      res.status(400).send("Wrong password");
+    }
+    //Creation of web token
+    // Set the payload and options for the JWT
+    const payload = {
+      id: dbResponse._id,
+    };
+    const options = {
+      expiresIn: "1h",
+      algorithm: "HS256",
+      issuer: "ContactApp",
+    };
+
+    // Generate the JWT using the payload, secret key, and options
+    const secretKey = "blackcats";
+    const token = jwt.sign(payload, secretKey, options);
+
+    res.status(200).send(token);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Unexpected error");
+  }
+};
