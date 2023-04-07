@@ -13,6 +13,9 @@ function AddContact() {
   const navigate = useNavigate();
 
   const hadnleAdd = async () => {
+
+    try {
+      
     const apiResponse = await axios.post(
       "http://localhost:3200/addUser",
       newUser
@@ -24,7 +27,12 @@ function AddContact() {
     } else {
       toast("Cannot add user  ❌");
     }
-    console.log(apiResponse);
+    } catch (error) {
+      console.log(error);
+      toast.error("cannot handle request ⚠️")
+      
+    }
+
   };
   return (
     <>

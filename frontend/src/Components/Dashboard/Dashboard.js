@@ -10,7 +10,6 @@ function Dashboard() {
   const [Contacts, setContacts] = useState([]);
   const [show, setShow] = useState(false);
 
-  
   const [oldUser, setOldUser] = useState({
     _id:null,
     name: "",
@@ -18,9 +17,7 @@ function Dashboard() {
     age: null,
   });
 
-
   const navigate = useNavigate();
-
 
   //Get Contacts from the server
   const getCotacts = async () => {
@@ -28,10 +25,10 @@ function Dashboard() {
 
     setContacts(data.data);
   };
-  const handleEdit = (elm)=>{
-    setShow(true)
-    setOldUser(elm)
-    //navigate(`/Editcontact/${id}`)
+  const handleEdit = (id)=>{
+ // setShow(true)
+  //  setOldUser(elm)
+    navigate(`/Editcontact/${id}`)
   }
   const handleDelete = async(id)=>{
     const apiResponse = await axios.delete(
@@ -97,7 +94,7 @@ function Dashboard() {
               <td>{elm.age}</td>
               <td>
                 {" "}
-                <Button variant="success" onClick={()=>{ handleEdit(elm)}}>Edit <BiEdit/></Button>{" "}
+                <Button variant="success" onClick={()=>{ handleEdit(elm._id)}}>Edit <BiEdit/></Button>{" "}
                 <Button variant="danger" onClick={()=>{ handleDelete(elm._id)}} >Delete <BiTrash/></Button>{" "}
 
               </td>

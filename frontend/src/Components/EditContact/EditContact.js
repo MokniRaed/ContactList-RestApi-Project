@@ -13,7 +13,6 @@ function EditContact() {
     _id:null,
     name: "",
     lastname: "",
-    age: null,
   });
 
   const hadnleEdit = async() => {
