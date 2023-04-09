@@ -115,6 +115,7 @@ exports.login = async (req, res) => {
     const payload = {
       id: dbResponse._id,
     };
+    //option for jwt code , exmple : time of expiring if the code
     const options = {
       expiresIn: "1h",
       algorithm: "HS256",
