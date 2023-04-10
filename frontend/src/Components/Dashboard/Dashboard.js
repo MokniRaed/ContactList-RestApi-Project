@@ -21,7 +21,15 @@ function Dashboard() {
 
   //Get Contacts from the server
   const getCotacts = async () => {
-    const data = await axios.get("http://localhost:3200/getusers");
+    const token = localStorage.getItem("token")
+    //Define the request headers
+    const headers = {
+      'Authorization':`Bearer ${token}` 
+    }
+    //Add the headers to the request
+    const data = await axios.get("http://localhost:3200/getusers",{
+      headers:headers
+    });
 
     setContacts(data.data);
   };

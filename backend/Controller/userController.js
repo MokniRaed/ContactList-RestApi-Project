@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const authSchema = require("../Models/authSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 exports.getUsers = async (req, res) => {
   try {
     const users = await UserSchema.find();
@@ -88,6 +89,7 @@ exports.register = async (req, res) => {
     user.save();
     //-------------------------------------------
 
+    
     //---- Response if  the register works ------
     res.status(200).send("User Registred ✅");
     //-------------------------------------------
