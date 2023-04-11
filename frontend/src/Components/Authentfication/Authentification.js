@@ -67,7 +67,7 @@ function Authentification() {
       <div className="main">
         <input type="checkbox" id="chk" aria-hidden="true" />
         <div className="signup">
-          <form>
+          <form className="">
             <label for="chk" aria-hidden="true">
               Register
             </label>
@@ -95,7 +95,7 @@ function Authentification() {
         </div>
 
         <div className="login">
-          <form>
+          <form  className="">
             <label for="chk" aria-hidden="true">
               Login
             </label>
