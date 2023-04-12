@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Authentification.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchAuth } from "../../Redux/authSlice";
 
 function Authentification() {
-	const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const auth = localStorage.getItem("token");
+
   const [registerUser, setRegisterUser] = useState({
     email: "",
     password: "",
@@ -15,11 +20,9 @@ function Authentification() {
     password: "",
   });
 
-  const handleRegister = async(e) => {
-
-	console.log(registerUser);
-
+  const handleRegister = async (e) => {
     e.preventDefault();
+
     try {
       const apiResponse = await axios.post(
         "http://localhost:3200/register",
@@ -28,7 +31,7 @@ function Authentification() {
       if (apiResponse.status === 200) {
         toast("User Registered ✅");
       } else {
-		console.log(apiResponse);
+        console.log(apiResponse);
         toast.error("something went wrong");
       }
     } catch (error) {
@@ -38,9 +41,7 @@ function Authentification() {
 
   //-------------------- LogIn-----------------------------
 
-  const handleLogin = async(e) => {
-
-
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
@@ -48,19 +49,26 @@ function Authentification() {
         "http://localhost:3200/login",
         loginUser
       );
+
       if (apiResponse.status === 200) {
-		const token = apiResponse.data
-		localStorage.setItem("token",token)
-        //Navigate to 
-		navigate('/dashboard')
+       await dispatch(fetchAuth(apiResponse.data))
+       localStorage.setItem("token",apiResponse.data.token)
+        navigate("/dashboard")
       } else {
-		console.log(apiResponse);
+        console.log(apiResponse);
         toast.error("something went wrong");
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (auth) {
+      navigate("/dashboard");
+    }
+   
+  }, [auth,navigate]);
 
   return (
     <div className="authBody">
@@ -95,7 +103,7 @@ function Authentification() {
         </div>
 
         <div className="login">
-          <form  className="">
+          <form className="">
             <label for="chk" aria-hidden="true">
               Login
             </label>
@@ -116,7 +124,7 @@ function Authentification() {
                 setLoginUser({ ...loginUser, password: e.target.value })
               }
             />
-            <button onClick={(e)=>handleLogin(e)}>Login</button>
+            <button onClick={(e) => handleLogin(e)}>Login</button>
           </form>
         </div>
       </div>

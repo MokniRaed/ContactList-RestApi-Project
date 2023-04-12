@@ -6,37 +6,46 @@ import { toast } from "react-toastify";
 
 function EditContact() {
   const { id } = useParams();
-  const navigate = useNavigate()
-  console.log("id1 ",id);
+  const navigate = useNavigate();
+  console.log("id1 ", id);
 
   const [oldUser, setOldUser] = useState({
-    _id:null,
+    _id: null,
     name: "",
     lastname: "",
   });
 
-  const hadnleEdit = async() => {
+  const hadnleEdit = async () => {
+    const token = localStorage.getItem("token");
+    //Define the request headers
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     const apiResponse = await axios.put(
-        `http://localhost:3200/edituser/${id}`,
-        oldUser
-      );
-  
-      if (apiResponse.status === 200) {
-        toast("User Edited ✅");
-        navigate('/')
-      } else {
-        toast("Cannot edit user  ❌");
+      `http://localhost:3200/edituser/${id}`,
+      oldUser,
+      {
+        headers: headers,
       }
-      console.log(apiResponse);
+    );
+
+    if (apiResponse.status === 200) {
+      toast("User Edited ✅");
+      navigate("/");
+    } else {
+      toast("Cannot edit user  ❌");
+    }
+    console.log(apiResponse);
   };
 
   useEffect(() => {
     const getOldUser = async () => {
-        console.log("id2 ",id);
-      const apiResponse = await axios.get(`http://localhost:3200/getbyid/${id}`);
-      console.log("this is our api response",apiResponse);
-      setOldUser(apiResponse.data)
-
+      console.log("id2 ", id);
+      const apiResponse = await axios.get(
+        `http://localhost:3200/getbyid/${id}`
+      );
+      console.log("this is our api response", apiResponse);
+      setOldUser(apiResponse.data);
     };
 
     getOldUser();

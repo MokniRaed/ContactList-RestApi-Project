@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { addContactService } from "../../services/contactServices";
 
 function AddContact() {
   const [newUser, setNewUser] = useState({
@@ -13,26 +13,19 @@ function AddContact() {
   const navigate = useNavigate();
 
   const hadnleAdd = async () => {
-
     try {
-      
-    const apiResponse = await axios.post(
-      "http://localhost:3200/addUser",
-      newUser
-    );
+      const apiResponse = await addContactService(newUser);
 
-    if (apiResponse.status === 200) {
-      toast("User Added ✅");
-      navigate('/')
-    } else {
-      toast("Cannot add user  ❌");
-    }
+      if (apiResponse.status === 200) {
+        toast("User Added ✅");
+        navigate("/");
+      } else {
+        toast("Cannot add user  ❌");
+      }
     } catch (error) {
       console.log(error);
-      toast.error("cannot handle request ⚠️")
-      
+      toast.error("cannot handle request ⚠️");
     }
-
   };
   return (
     <>

@@ -127,8 +127,8 @@ exports.login = async (req, res) => {
     // Generate the JWT using the payload, secret key, and options
     const secretKey = "blackcats";
     const token = jwt.sign(payload, secretKey, options);
-
-    res.status(200).send(token);
+    const userEmail = dbResponse.email
+    res.status(200).send({userEmail,token});
   } catch (error) {
     console.log(error);
     res.status(500).send("Unexpected error");
